@@ -11,8 +11,8 @@ from typing import (
     Literal,
     get_args as typing_get_args,
     Set,
+    TypeAlias,
 )
-from typing_extensions import TypeAlias
 
 import click as cli
 
