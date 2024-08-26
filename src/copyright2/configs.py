@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import ClassVar, List, Type, TypeVar
+from typing import ClassVar, List, Type, TypeVar, cast
 
 import yaml
 from marshmallow import Schema
@@ -37,9 +37,7 @@ class Config:
     git_path_working: bool | None = None
     git_path_staged: bool | None = None
 
-    def __or__(self, other) -> Config:
-        if not isinstance(other, Config):
-            return NotImplemented
+    def __or__(self, other: Config) -> Config:
         return merge(self, other)
 
 
@@ -80,7 +78,7 @@ def load(path: Path) -> Config:
 
     json = yaml.safe_load(text)
 
-    return Config.Schema().load(json)
+    return cast(Config, Config.Schema().load(json))
 
 
 class NoRootError(Exception): ...

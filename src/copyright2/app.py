@@ -150,7 +150,7 @@ def check(
         nonlocal num_errs
 
         if file.cfg.copyright is None:
-            cli.echo(f"{file.path}: template not set")
+            cli.echo(f"{file.path}: copyright not set")
             num_errs += 1
             return
 
@@ -170,8 +170,8 @@ def check(
             ts_add.add(datetime.now().year)
 
         for update in f.Analyzer(
-            ts_simplify=file.cfg.simplify,
-            ts_exact=file.cfg.exact,
+            ts_simplify=file.cfg.simplify or False,
+            ts_exact=file.cfg.exact or False,
             ts_add=tuple(ts_add),
         ).analyse(notices):
             for change in update.changes:
@@ -211,7 +211,7 @@ def fix(
         nonlocal num_fixed
 
         if file.cfg.copyright is None:
-            cli.echo(f"{file.path}: template not set", err=True)
+            cli.echo(f"{file.path}: copyright not set", err=True)
             num_errs += 1
             return
 
@@ -232,8 +232,8 @@ def fix(
 
         updates = tuple(
             f.Analyzer(
-                ts_simplify=file.cfg.simplify,
-                ts_exact=file.cfg.exact,
+                ts_simplify=file.cfg.simplify or False,
+                ts_exact=file.cfg.exact or False,
                 ts_add=tuple(ts_add),
             ).analyse(notices)
         )

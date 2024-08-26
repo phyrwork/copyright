@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from functools import cached_property, reduce
 from itertools import chain, zip_longest
-from typing import Iterable, Iterator, Literal, Set, Tuple, TypeAlias, Union
+from typing import Any, Iterable, Iterator, Literal, Set, Tuple, TypeAlias, Union
 
 
 class Int(int):
@@ -36,10 +36,7 @@ class Int(int):
     def lsf(self) -> int:
         return self[-1]
 
-    def __and__(self, other) -> Int:
-        if not isinstance(other, int):
-            return NotImplemented
-
+    def __and__(self, other: int) -> Int:
         if not isinstance(other, Int):
             other = Int(other)
 
@@ -55,12 +52,11 @@ class Int(int):
             if a != b:
                 break
 
-        return Int.from_digits(self.digits[:o]) * 10 ** (len(self.digits) - o)
+        return Int.from_digits(  # type:ignore[no-any-return]  # mypy bug?
+            self.digits[:o]
+        ) * 10 ** (len(self.digits) - o)
 
-    def __xor__(self, other) -> Int:
-        if not isinstance(other, int):
-            return NotImplemented
-
+    def __xor__(self, other: int) -> Int:
         if not isinstance(other, Int):
             other = Int(other)
 
@@ -78,10 +74,7 @@ class Int(int):
 
         return Int.from_digits(self.digits[o:])
 
-    def __or__(self, other) -> Int:
-        if not isinstance(other, int):
-            return NotImplemented
-
+    def __or__(self, other: int) -> Int:
         if not isinstance(other, Int):
             other = Int(other)
 
@@ -153,13 +146,7 @@ class Range(Tuple[int, int]):
 
         return f"{self.start}-{self.end}"
 
-    def __or__(self, other) -> Range | None:
-        if isinstance(other, int):
-            other = Range((other, other))
-
-        if not isinstance(other, Range):
-            return NotImplemented
-
+    def __or__(self, other: Range) -> Range | None:
         if self < other:
             a, b = self, other
         else:
@@ -310,6 +297,6 @@ def compile(ranges: Iterable[Range], sort: bool = True) -> Iterator[Token]:
         yield Int(start) ^ base
 
         if start != end:
-            base = end
+            base = Int(end)
             yield "-"
             yield Int(end) ^ Int(start)
