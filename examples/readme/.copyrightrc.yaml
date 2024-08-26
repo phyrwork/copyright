@@ -1,0 +1,5 @@
+root: yes
+copyright: Copyright \(c\) {ts}
+include_dirs:
+  - .*
+simplify: yes
