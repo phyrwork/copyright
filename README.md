@@ -46,6 +46,8 @@ root: yes
 copyright: "Copyright \(c\) {ts}"
 include_dirs:
   - .*  # All directories.
+include_files:
+  - README.md$
 simplify: yes  # Simplify copyright year expression.
 ```
    
