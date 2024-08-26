@@ -2,23 +2,14 @@ import os
 from datetime import datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import (
-    Iterator,
-    Tuple,
-    Callable,
-    Any,
-    Iterable,
-    Literal,
-    get_args as typing_get_args,
-    Set,
-    TypeAlias,
-)
+from typing import Any, Callable, Iterable, Iterator, Literal, Set, Tuple, TypeAlias
+from typing import get_args as typing_get_args
 
 import click as cli
 
-from . import git
 from . import files as f
 from . import filesystem as fs
+from . import git
 
 
 class FilePathFinder(fs.PathFinder):

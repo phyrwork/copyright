@@ -33,7 +33,7 @@ def main():
 '''
         )
 
-        sc = fi.Scanner(fi.notice_pattern("Connor Newton \(c\) {ts}"))
+        sc = fi.Scanner(fi.notice_pattern(r"Connor Newton \(c\) {ts}"))
 
         assert tuple(sc.scan(file)) == (
             fi.Notice(5, 21, 47, 39, 47, tuple(ts.tokenize("2020-2,4"))),

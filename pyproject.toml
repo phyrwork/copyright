@@ -24,6 +24,9 @@ isort = "^5.13.2"
 [tool.poetry.scripts]
 copyright = "copyright2.app:main"
 
+[tool.isort]
+profile = "black"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

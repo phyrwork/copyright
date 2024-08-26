@@ -16,16 +16,16 @@ def test_iter_subdirs_example() -> None:
 
     root = cfg.DEFAULTS | cfg.Config(
         root=True,
-        copyright="Copyright (c) {intervals}",
+        copyright="Copyright \(c\) {ts}",
         include_dirs=[".*"],
         exclude_dirs=[],
-        include_files=[".*\.py"],
+        include_files=[r".*\.py"],
         exclude_files=[],
     )
 
     a = root | cfg.Config()
 
-    b = a | cfg.Config(exclude_files=["excluded\.py"])
+    b = a | cfg.Config(exclude_files=[r"excluded\.py"])
 
     assert files == {
         EXAMPLES / "subdirs": root,
