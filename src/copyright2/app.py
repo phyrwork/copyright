@@ -1,18 +1,54 @@
 import os
+from email.policy import default
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Iterator, Tuple
+from typing import (
+    Iterator,
+    Tuple,
+    Callable,
+    Any,
+    Iterable,
+    Literal,
+    get_args as typing_get_args,
+)
+from typing_extensions import TypeAlias
 
 import click as cli
 
-from . import configs as cfg
+from . import git
 from . import files as f
 from . import filesystem as fs
 
 
-class Context:
-    def __init__(self, cfg: cfg.Config):
-        self.cfg = cfg
+class FilePathFinder(fs.PathFinder):
+    def find(self, args: Tuple[str, ...]) -> Iterable[Path]:
+        if not args:
+            args = (".",)
+        return map(Path, args)
+
+
+PathFinderType: TypeAlias = Literal["file", "git"]
+
+
+PATH_FINDER_TYPES: Tuple[PathFinderType, ...] = typing_get_args(PathFinderType)
+
+
+def find_path(
+    find_path_type: PathFinderType,
+    find_path_args: Tuple[str, ...],
+    git_path_working: bool,
+    git_path_staged: bool,
+) -> Iterable[Path]:
+    finder: fs.PathFinder
+
+    if find_path_type == "file":
+        finder = FilePathFinder()
+    elif find_path_type == "git":
+        finder = git.PathFinder(git_path_working, git_path_staged)
+    else:
+        raise TypeError(find_path_type)
+
+    return finder.find(find_path_args)
 
 
 class App:
@@ -29,6 +65,31 @@ class App:
         return sum(1 for _ in self.list_files())
 
 
+def path_options(f: Callable[..., Any]) -> Callable[..., Any]:
+    f = cli.option(
+        "--find-path",
+        "find_path_type",
+        type=cli.Choice(PATH_FINDER_TYPES),
+        default="file",
+    )(f)
+    f = cli.option(
+        "--git-path-working/--git-path-no-working",
+        "git_path_working",
+        default=True,
+    )(f)
+    f = cli.option(
+        "--git-path-staged/--git-path-no-staged",
+        "git_path_staged",
+        default=True,
+    )(f)
+    f = cli.argument(
+        "find_path_args",
+        type=str,
+        nargs=-1,
+    )(f)
+    return f
+
+
 @cli.group
 def main() -> None: ...
 
@@ -37,14 +98,16 @@ _list = list
 
 
 @main.command
-@cli.argument(
-    "path",
-    type=cli.Path(exists=True, path_type=Path),
-    nargs=-1,
-)
-def list(path: Tuple[Path, ...]) -> None:
-    if len(path) == 0:
-        path = (Path("."),)
+@path_options
+def list(
+    find_path_type: PathFinderType,
+    find_path_args: Tuple[str, ...],
+    git_path_working: bool,
+    git_path_staged: bool,
+) -> None:
+    path = tuple(
+        find_path(find_path_type, find_path_args, git_path_working, git_path_staged)
+    )
 
     app = App(path)
 
@@ -57,14 +120,16 @@ def list(path: Tuple[Path, ...]) -> None:
 
 
 @main.command
-@cli.argument(
-    "path",
-    type=cli.Path(exists=True, path_type=Path),
-    nargs=-1,
-)
-def check(path: Tuple[Path, ...]) -> None:
-    if len(path) == 0:
-        path = (Path("."),)
+@path_options
+def check(
+    find_path_type: PathFinderType,
+    find_path_args: Tuple[str, ...],
+    git_path_working: bool,
+    git_path_staged: bool,
+) -> None:
+    path = tuple(
+        find_path(find_path_type, find_path_args, git_path_working, git_path_staged)
+    )
 
     app = App(path)
 
@@ -105,14 +170,16 @@ def check(path: Tuple[Path, ...]) -> None:
 
 
 @main.command
-@cli.argument(
-    "path",
-    type=cli.Path(exists=True, path_type=Path),
-    nargs=-1,
-)
-def fix(path: Tuple[Path, ...]) -> None:
-    if len(path) == 0:
-        path = (Path("."),)
+@path_options
+def fix(
+    find_path_type: PathFinderType,
+    find_path_args: Tuple[str, ...],
+    git_path_working: bool,
+    git_path_staged: bool,
+) -> None:
+    path = tuple(
+        find_path(find_path_type, find_path_args, git_path_working, git_path_staged)
+    )
 
     app = App(path)
 

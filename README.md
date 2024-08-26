@@ -15,6 +15,7 @@ were modified.
 - Fix mode which updates files with missing changes.
 - Intelligently simplifies copyright year expressions e.g. `2009,2010,2011,2013` to
   `2009-11,3`.
+- Git path mode for using Git to identify which files to check in CI.
 
 ## Getting Started
 
@@ -63,7 +64,7 @@ include_files:
   - .*\.(c|h)$  # Only .c, .h files in this directory and below.
 ```
 
-#### Run
+#### Run (development)
 
 Check files that will be managed by `copyright`
 
@@ -83,7 +84,7 @@ src/readme.py: 1: simplified timestamp expression
 1
 ```
 
-(the exit code will be `0` if no changes are found) and fix them
+and fix them
 
 ```bash
 examples/readme$ copyright fix
@@ -98,4 +99,17 @@ index 65785b6..cb2603b 100644
 @@ -1 +1 @@
 -"""Copyright (c) 2023,2024,2025."""
 +"""Copyright (c) 2023-5."""
+```
+
+#### Run (CI)
+
+The `check` command will only return `0` if no required changes are detected.
+
+To restrict the check to only files which have changed between the previous and current
+commit
+
+```bash
+examples/readme$ copyright list --find-path git HEAD~1
+src/readme.py
+1
 ```

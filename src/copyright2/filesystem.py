@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import re
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Iterable, Iterator, List
+from typing import Iterable, Iterator, List, Protocol, Tuple
 
 from . import configs
 
@@ -111,3 +112,8 @@ def reduce_path(path: Iterable[Path]) -> Iterator[Path]:
                 break
         if emit:
             yield subj
+
+
+class PathFinder(Protocol):
+    @abstractmethod
+    def find(self, args: Tuple[str, ...]) -> Iterable[Path]: ...

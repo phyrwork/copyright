@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
-from typing import ClassVar, List, Tuple, Type, TypeVar
+from typing import ClassVar, List, Type, TypeVar
 
 import yaml
 from marshmallow import Schema
@@ -34,8 +34,8 @@ class Config:
     simplify: bool | None = None
     exact: bool | None = None
     add_now: bool | None = None
-    git_diff_working: bool | None = None
-    git_diff_staged: bool | None = None
+    git_path_working: bool | None = None
+    git_path_staged: bool | None = None
 
     def __or__(self, other) -> Config:
         if not isinstance(other, Config):
@@ -51,8 +51,8 @@ DEFAULTS = Config(
     simplify=False,
     exact=False,
     add_now=False,
-    git_diff_working=True,
-    git_diff_staged=True,
+    git_path_working=True,
+    git_path_staged=True,
 )
 
 
@@ -67,8 +67,8 @@ def merge(base: Config, other: Config) -> Config:
         simplify=first_not_none(other.simplify, base.simplify),
         exact=first_not_none(other.exact, base.exact),
         add_now=first_not_none(other.add_now, base.add_now),
-        git_diff_working=first_not_none(other.git_diff_working, base.git_diff_working),
-        git_diff_staged=first_not_none(other.git_diff_staged, base.git_diff_staged),
+        git_path_working=first_not_none(other.git_path_working, base.git_path_working),
+        git_path_staged=first_not_none(other.git_path_staged, base.git_path_staged),
     )
 
 
