@@ -16,6 +16,7 @@ were modified.
 - Intelligently simplifies copyright year expressions e.g. `2009,2010,2011,2013` to
   `2009-11,3`.
 - Git path mode for using Git to identify which files to check in CI.
+- Configurable to quickly add current year to modified files when using Git path mode.
 
 ## Getting Started
 
@@ -38,7 +39,8 @@ pip install git+https://github.com/phyrwork/copyright2.git
 Create a `.copyrightrc.yaml` at the top level of your project and describe your copyright
 notice and specify some files to manage using regular expressions.
 
-By default, no files or directories are included.
+By default, no files or directories are included and no changes are made to included
+files.
 
 ```yaml
 # .copyrightrc.yaml
@@ -72,26 +74,30 @@ Check files that will be managed by `copyright`
 
 ```bash
 examples/readme$ copyright list
+README.md
 src/readme.py
 src/ext/readme.h
 src/ext/readme.c
-3
+4
 ```
 
 then scan for changes that need to be made to any copyright notices
 
 ```bash
 examples/readme$ copyright check
-src/readme.py: 1: simplified timestamp expression
-1
+README.md: notice not found
+src/ext/readme.h: 2: simplified timestamp expression
+2
 ```
 
 and fix them
 
 ```bash
 examples/readme$ copyright fix
+README.md: notice not found
 fixing src/readme.py... ok
-1
+fixing src/ext/readme.h... ok
+2
 
 examples/readme$ git diff
 diff --git a/examples/readme/src/readme.py b/examples/readme/src/readme.py
@@ -113,5 +119,14 @@ commit
 ```bash
 examples/readme$ copyright list --find-path git HEAD~1
 src/readme.py
+1
+```
+
+To ensure that the current year has been added to files which have changed between the
+previous and current commit, add the `--add-now` flag
+
+```bash
+examples/readme$ copyright check --find-path git HEAD~1 --add-now
+src/readme.py: 1: added year 2024 to timestamp
 1
 ```

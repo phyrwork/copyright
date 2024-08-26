@@ -1,5 +1,5 @@
 import os
-from email.policy import default
+from datetime import datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import (
@@ -10,6 +10,7 @@ from typing import (
     Iterable,
     Literal,
     get_args as typing_get_args,
+    Set,
 )
 from typing_extensions import TypeAlias
 
@@ -73,12 +74,12 @@ def path_options(f: Callable[..., Any]) -> Callable[..., Any]:
         default="file",
     )(f)
     f = cli.option(
-        "--git-path-working/--git-path-no-working",
+        "--git-path-working/--no-git-path-working",
         "git_path_working",
         default=True,
     )(f)
     f = cli.option(
-        "--git-path-staged/--git-path-no-staged",
+        "--git-path-staged/--no-git-path-staged",
         "git_path_staged",
         default=True,
     )(f)
@@ -86,6 +87,22 @@ def path_options(f: Callable[..., Any]) -> Callable[..., Any]:
         "find_path_args",
         type=str,
         nargs=-1,
+    )(f)
+    return f
+
+
+def file_options(f: Callable[..., Any]) -> Callable[..., Any]:
+    f = cli.option(
+        "--add-year",
+        "-a",
+        "add_year",
+        type=int,
+        multiple=True,
+    )(f)
+    f = cli.option(
+        "--add-now/--no-add-now",
+        "add_now",
+        default=False,
     )(f)
     return f
 
@@ -121,11 +138,14 @@ def list(
 
 @main.command
 @path_options
+@file_options
 def check(
     find_path_type: PathFinderType,
     find_path_args: Tuple[str, ...],
     git_path_working: bool,
     git_path_staged: bool,
+    add_year: Tuple[int, ...],
+    add_now: bool,
 ) -> None:
     path = tuple(
         find_path(find_path_type, find_path_args, git_path_working, git_path_staged)
@@ -153,8 +173,15 @@ def check(
             num_errs += 1
             return
 
+        ts_add: Set[int] = set(*add_year)
+
+        if add_now or file.cfg.add_now:
+            ts_add.add(datetime.now().year)
+
         for update in f.Analyzer(
-            ts_simplify=file.cfg.simplify, ts_exact=file.cfg.exact
+            ts_simplify=file.cfg.simplify,
+            ts_exact=file.cfg.exact,
+            ts_add=tuple(ts_add),
         ).analyse(notices):
             for change in update.changes:
                 cli.echo(f"{file.path}: {update.notice.lineno}: {change}")
@@ -176,6 +203,8 @@ def fix(
     find_path_args: Tuple[str, ...],
     git_path_working: bool,
     git_path_staged: bool,
+    add_year: Tuple[int, ...],
+    add_now: bool,
 ) -> None:
     path = tuple(
         find_path(find_path_type, find_path_args, git_path_working, git_path_staged)
@@ -205,10 +234,17 @@ def fix(
             num_errs += 1
             return
 
+        ts_add: Set[int] = set(*add_year)
+
+        if add_now or file.cfg.add_now:
+            ts_add.add(datetime.now().year)
+
         updates = tuple(
-            f.Analyzer(ts_simplify=file.cfg.simplify, ts_exact=file.cfg.exact).analyse(
-                notices
-            )
+            f.Analyzer(
+                ts_simplify=file.cfg.simplify,
+                ts_exact=file.cfg.exact,
+                ts_add=tuple(ts_add),
+            ).analyse(notices)
         )
 
         if not updates:
