@@ -1,6 +1,6 @@
 # copyright<sup>2</sup>
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/phyrwork/copyright2/ci.yaml)
 
 copyright<sup>2</sup> (copyright-right) is a text file copyright notice lint and update
 tool to help keep the years listed in your copyright notices up to date with when they
