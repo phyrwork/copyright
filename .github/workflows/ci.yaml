@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [ "3.10", "3.11", "3.12" ]
-        poetry-version: [ "1.8.3" ]
+        uv-version: [ "1.8.3" ]
         os: [ ubuntu-22.04 ]
 
     runs-on: ${{ matrix.os }}
@@ -29,33 +29,28 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Set up Poetry ${{ matrix.poetry-version }}
-        uses: abatilo/actions-poetry@v2
+      - name: Set up uv ${{ matrix.uv-version }}
+        uses: yezz123/setup-uv@v4
         with:
-          poetry-version: ${{ matrix.poetry-version }}
+          uv-version: "0.3.5"
 
-      - name: Set up virtual environment
-        run: |
-          poetry config virtualenvs.create true --local
-          poetry config virtualenvs.in-project true --local
-
-      - uses: actions/cache@v3
-        name: Define a cache for the virtual environment based on the dependencies lock file
+      - name: Set up cache
+        uses: actions/cache@v3
         with:
           path: ./.venv
-          key: venv-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ hashFiles('uv.lock') }}
 
       - name: Install dependencies
-        run: poetry install
+        run: uv sync
 
       - name: Check code style
-        run: poetry run black --check .
+        run: uv run black --check .
 
       - name: Check imports order
-        run: poetry run isort --check .
+        run: uv run isort --check .
 
       - name: Check types
-        run: poetry run mypy .
+        run: uv run mypy .
 
       - name: Run unit tests
-        run: poetry run pytest .
+        run: uv run pytest .

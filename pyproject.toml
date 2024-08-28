@@ -1,34 +1,29 @@
-[tool.poetry]
+[project]
 name = "copyright2"
 version = "0.1.0"
 description = "Text file copyright notice linter and updater."
-authors = ["Connor Newton <connor@ifthenelse.io>"]
+authors = [{name = "Connor Newton", email = "connor@ifthenelse.io" }]
 readme = "README.md"
-packages = [
-    { include = "copyright2", from = "src" }
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "marshmallow~=3.21.3",
+    "marshmallow-dataclass~=8.7.0",
+    "click~=8.1.7",
+    "pyyaml~=6.0.1",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-marshmallow = "^3.21.3"
-marshmallow-dataclass = "^8.7.0"
-click = "^8.1.7"
-pyyaml = "^6.0.1"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.2.2"
-pytest-runner = "^6.0.1"
-black = "^24.4.2"
-isort = "^5.13.2"
-mypy = "^1.11.2"
-types-pyyaml = "^6.0.12.20240808"
-
-[tool.poetry.scripts]
+[project.scripts]
 copyright = "copyright2.app:main"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest~=8.2.2",
+    "pytest-runner~=6.0.1",
+    "black~=24.4.2",
+    "isort~=5.13.2",
+    "mypy~=1.11.2",
+    "types-pyyaml~=6.0.12.20240808",
+]
 
 [tool.isort]
 profile = "black"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
