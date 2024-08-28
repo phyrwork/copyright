@@ -1,12 +1,12 @@
 from pathlib import Path
 
+from copyright2 import configs as cfg
+from copyright2 import filesystem as fs
+
 EXAMPLES = Path(__file__).parent.parent / "examples"
 
 if not EXAMPLES.is_dir():
     raise ValueError(f"examples directory {EXAMPLES.resolve()} not found")
-
-from copyright2 import configs as cfg
-from copyright2 import filesystem as fs
 
 
 def test_iter_subdirs_example() -> None:

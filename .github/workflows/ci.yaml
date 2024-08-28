@@ -43,11 +43,8 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Check code style
-        run: uv run black --check .
-
-      - name: Check imports order
-        run: uv run isort --check .
+      - name: Lint and check code format
+        run: uv run ruff check
 
       - name: Check types
         run: uv run mypy .

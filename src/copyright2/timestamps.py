@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from functools import cached_property, reduce
 from itertools import chain, zip_longest
-from typing import Any, Iterable, Iterator, Literal, Set, Tuple, TypeAlias, Union
+from typing import Iterable, Iterator, Literal, Set, Tuple, TypeAlias, Union
 
 
 class Int(int):

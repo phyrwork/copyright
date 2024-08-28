@@ -247,7 +247,7 @@ def fix(
             tmp.writelines(f.apply(text, updates))
 
         os.rename(tmp.name, file.path)
-        cli.echo(f" ok")
+        cli.echo(" ok")
         num_fixed += 1
 
     for i, file in enumerate(app.list_files(), start=1):

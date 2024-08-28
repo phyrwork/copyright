@@ -19,10 +19,9 @@ copyright = "copyright2.app:main"
 dev-dependencies = [
     "pytest~=8.2.2",
     "pytest-runner~=6.0.1",
-    "black~=24.4.2",
-    "isort~=5.13.2",
     "mypy~=1.11.2",
     "types-pyyaml~=6.0.12.20240808",
+    "ruff>=0.6.2",
 ]
 
 [tool.isort]
