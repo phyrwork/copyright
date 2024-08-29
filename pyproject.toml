@@ -1,6 +1,6 @@
 [project]
 name = "copyright2"
-version = "0.1.0"
+version = "0.1.1"
 description = "Text file copyright notice linter and updater."
 authors = [{name = "Connor Newton", email = "connor@ifthenelse.io" }]
 readme = "README.md"
