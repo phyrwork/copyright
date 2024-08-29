@@ -22,14 +22,14 @@ were modified.
 
 ### Prerequisites
 
-- Python 3.9 or later
+- Python 3.10 or later
 
 ### Installation
 
-Install from source using your favourite package manager
+Install using your favourite package manager
 
 ```bash
-pip install git+https://github.com/phyrwork/copyright2.git
+pip install copyright2
 ```
 
 ### Usage
