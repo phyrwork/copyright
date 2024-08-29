@@ -62,7 +62,7 @@ class File:
             exclude_dirs=self.cfg.exclude_dirs,
         )
 
-        for path in self.path.iterdir():
+        for path in sorted(self.path.iterdir()):
             if not filter.match(path):
                 continue
 

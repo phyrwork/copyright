@@ -44,9 +44,9 @@ def test_list_readme(examples_readme: None) -> None:
 
     assert result.stdout.splitlines() == [
         "README.md",
-        "src/readme.py",
-        "src/ext/readme.h",
         "src/ext/readme.c",
+        "src/ext/readme.h",
+        "src/readme.py",
         "4",
     ]
 
