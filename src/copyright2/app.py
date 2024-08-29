@@ -189,6 +189,7 @@ def check(
 
 @main.command
 @path_options
+@file_options
 def fix(
     find_path_type: PathFinderType,
     find_path_args: Tuple[str, ...],
