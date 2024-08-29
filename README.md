@@ -26,10 +26,24 @@ were modified.
 
 ### Installation
 
-Install using your favourite package manager
+Install using your favourite package manager e.g.
 
 ```bash
 pip install copyright2
+```
+
+```bash
+poetry install copyright2
+```
+
+or, if using as an application only, install in isolation e.g.
+
+```bash
+pipx install copyright2
+````
+
+```bash
+uv tool install copyright2
 ```
 
 ### Usage
